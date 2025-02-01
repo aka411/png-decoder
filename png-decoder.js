@@ -1,4 +1,7 @@
 
+
+
+
 function pngDecode(PNG)
 {
 
@@ -71,11 +74,7 @@ const Interlace_method=Bite_reader(1);
 var Components_per_pixel=0;
 
 
-T1.value+="Height :"+Height+"  Width : "+Width +"\n";
-T1.value+="\nBit_depth : "+Bit_depth+"\n";
-T1.value+="\nCompression_method : "+Compression_method+"\n";
-T1.value+="\nFilter_method : "+Filter_method+"\n";
-T1.value+="\nInterlace_method : "+Interlace_method+"\n";
+
 
 
 
@@ -1050,28 +1049,28 @@ break;
 
 
 case 0x504C5445://PLTE
-T1.value+="\nPLTE header present\n";
+
 Read_Palette();
 break;
 
 
 case 0x70485973://pHYs
-T1.value+="\npHYs header present\n";
+
 Skip_header();
 break;
 
 case 0x67414D41://gAMA
-T1.value+="\ngAMA header present\n";
+
 Skip_header();
 break;
 
 case 0x624B4744://bKGD
-T1.value+="\nbKGD header present\n";
+
 Skip_header();
 break;
 
 case 0x74524E53://tRNS
-T1.value+="\ntRNS header present\n";
+
 Skip_header();
 break;
 
@@ -1114,38 +1113,6 @@ Header_reader();
 
 
 var Raw_image_data=new Uint8Array(Height*Width*Components_per_pixel);
-
-
-
-/***************
- Special Defilter for
- less than 8 bit depth
-********************/
-
-// Function to download data to a file
-function download(data, filename, type) {
-    var file = new Blob([data], {type: type});
-    if (window.navigator.msSaveOrOpenBlob) // IE10+
-        window.navigator.msSaveOrOpenBlob(file, filename);
-    else { // Others
-        var a = document.createElement("a"),
-                url = URL.createObjectURL(file);
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        setTimeout(function() {
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-        }, 0);
-    }
-}
-
-
-
-
-
-
 
 
 
@@ -1377,32 +1344,32 @@ switch(Filter)
 {
 
 case 0x00 ://None
-T1.value+="\nNone filter\n";
+
 None();
 break;
 
 case 0x01://Sub
-T1.value+="\nSub filter\n";
+
 Sub();
 break;
 
 case 0x2://Up
-T1.value+="\nUp filter\n";
+
 Up();
 break;
 
 case 0x3://Average
-T1.value+="\nAverage filter\n";
+
 Average();
 break;
 
 case 0x4://Paeth
-T1.value+="\nPaeth filter\n";
+
 Paeth();
 break;
 
 default :
-T1.value+="\n\nUnrecognized filter!!!! : \n";
+
 break;
 
 
@@ -1453,7 +1420,7 @@ for(let i=0;i<Height*Width;i++)
 index+=1;
 }
 
-Components_per_pixel=3;
+Components_per_pixel=3;//changing to 3 cause its RGB
 
 Raw_image_data= Raw_image_data_P;
 
@@ -1469,63 +1436,17 @@ Raw_image_data= Raw_image_data_P;
 
 
 
+const imageContainer = {
+  height : Height,
+  width : Width,
+  channels : Components_per_pixel,
+  data : Raw_image_data
 
 
+};
 
+return imageContainer;
 
-
-
-
-var R=0,G=0,B=0,A=0;
-var img_index=0;
-var x=0,y=0;
-for( y=0;y<Height;y++){
-for( x=0;x<Width;x++){
-
-
-
-
-if(Components_per_pixel==4){
-R=Raw_image_data[img_index];
-G=Raw_image_data[img_index+1];
-B=Raw_image_data[img_index+2];
-A=Raw_image_data[img_index+3];
-}
-else if(Components_per_pixel==2)
-{
-R=Raw_image_data[img_index];
-G=Raw_image_data[img_index];
-B=Raw_image_data[img_index];
-A=Raw_image_data[img_index+1];
-}
-else if(Components_per_pixel==3){
-R=Raw_image_data[img_index];
-G=Raw_image_data[img_index+1];
-B=Raw_image_data[img_index+2];
-A=100;
-}
-else if(Color_type==0){
-R=Raw_image_data[img_index];
-G=Raw_image_data[img_index];
-B=Raw_image_data[img_index];
-A=100;
-}/*
-else if(Color_type==3){
-R=Palette[((Raw_image_data[img_index])*3)];
-G=Palette[((Raw_image_data[img_index])*3)+1];
-B=Palette[((Raw_image_data[img_index])*3)+2];
-A=100;
-}
-*/
-
-ctx.fillStyle = "rgba("+R+","+G+","+B+","+A+")";
-ctx.fillRect(x, y,1,1);
-
-img_index+=Components_per_pixel;//stride
-}
-
-
-}
 
 
 }

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>PNG Decoder in JavaScript</title>
+	<script src="./png-decoder.js"></script>
+</head>
+<body>
+	<input type="file" id="png-file"></input>
+	<button  id="read-button">Start Decode</button>
+<script>
+
+
+function draw(image){
+	var canvas = document.createElement('canvas');
+  canvas.id     = "DrawLayer";
+  canvas.width  = image.width;
+  canvas.height = image.height;
+	var body = document.getElementsByTagName("body")[0];
+	document.body.appendChild(canvas);
+
+	const ctx = document.getElementById("DrawLayer").getContext("2d");
+
+  const Height = image.height;
+	const Width = image.width;
+	const channels = image.channels;
+	const data = image.data;
+	let color = [0,0,0,0];
+	let index = 0;
+console.log(image);
+	for( y=0;y<Height;y++){
+		for( x=0;x<Width;x++){
+
+			for(let i = 0;i<channels;i++){
+
+				color[i]=data[index++];
+			}
+
+
+			if(channels==4)ctx.fillStyle = "rgba("+color[0]+","+color[1]+","+color[2]+","+color[3]+")";
+			if(channels==3)ctx.fillStyle = "rgb("+color[0]+","+color[1]+","+color[2]+")";
+			if(channels==2)ctx.fillStyle = "rgb("+color[0]+","+color[0]+","+color[0]+","+color[1]+")";
+			if(channels==1)ctx.fillStyle = "rgb("+color[0]+","+color[0]+","+color[0]+","+")";
+
+
+			ctx.fillRect(x, y,1,1);
+
+
+	}
+}
+
+
+
+}
+
+
+
+
+
+
+
+
+function Read(file){
+
+	let Reader= new FileReader();
+
+	Reader.readAsArrayBuffer(file);
+
+
+	Reader.addEventListener('loadend',()=>{
+
+		let PNG= new Uint8Array(Reader.result);
+
+
+
+		const image = pngDecode(PNG);
+		draw(image);
+
+	});
+}
+
+
+document.getElementById("read-button").addEventListener('click',()=>{
+
+	let file= document.getElementById("png-file").files[0];
+	Read(file);
+	}
+);
+
+
+
+</script>
+</body>
+</html>
