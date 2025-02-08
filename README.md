@@ -4,5 +4,7 @@ I wrote this as i was curious about how file compression works.I learned a lot w
 
 ## Resources that helped me write this decoder
 
-* For Png Specification [PNG SPECIFICATION]( https://www.w3.org/TR/2003/REC-PNG-20031110/)
+* For Png Specification [PNG SPECIFICATION](http://www.libpng.org/pub/png/spec/1.2/png-1.2.pdf)
+* For ZLIB Compressed Data Format Specification [ZLIB Data Format](https://www.ietf.org/rfc/rfc1950.txt)
+* For Deflate compression [Deflate](https://www.rfc-editor.org/rfc/rfc1951.html)
   
